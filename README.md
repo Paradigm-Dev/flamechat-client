@@ -1,2 +1,2 @@
-# flamechat-client
-Desktop client for Flamechat
+# Spread
+A lightweight, yet powerful spreadsheet processor.
