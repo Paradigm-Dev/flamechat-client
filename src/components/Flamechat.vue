@@ -446,12 +446,13 @@ export default {
 					this.new_chatroom_name = doc.data().name
 					db.collection('users').doc(this.$root.username).update({
 						chatrooms: app.firestore.FieldValue.arrayUnion({ id: this.new_chatroom_id, name: this.new_chatroom_name })
+					}).then(() => {
+						this.new_chatroom_id = ''
 					})
 				} else {
 					this.$notify('Chatroom does not exist')
 				}
 			})
-			this.new_chatroom_id = ''
 		},
 		createChatroom() {
 			db.collection('flamechat').doc(this.create_chatroom_id).set({
