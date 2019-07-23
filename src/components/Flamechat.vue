@@ -70,9 +70,9 @@
 				<v-card class="welcome-card" v-if="!ready || !chatroom_id">
 					<v-card-title>Welcome to Flamechat!</v-card-title>
 					<v-card-text>
-						<v-layout row wrap text-xs-center align-center justify-center>
+						<v-layout row wrap text-center align-center justify-center class="mx-auto">
 							<v-flex xs11><v-text-field v-model="new_chatroom_id" label="Chatroom ID"></v-text-field></v-flex>
-							<v-flex xs1><v-btn text icon @click="saveChatroom()"><v-icon>mdi-plus</v-icon></v-btn></v-flex>
+							<v-flex xs1><v-btn small icon @click="saveChatroom()"><v-icon>mdi-plus</v-icon></v-btn></v-flex>
 						</v-layout>
 						<p>Your chatrooms:</p>
 						<v-radio-group v-model="chatroom_id" column>
@@ -111,19 +111,19 @@
 									<v-flex xs2 text-xs-right>
 										<v-tooltip bottom open-delay="1000">
 											<template v-slot:activator="{ on }">
-												<v-btn v-on="on" class="admin-btn" icon text color="orange" v-if="$root.isAdmin || $root.username == message.name" @click.prevent="reportChat(message.id)"><v-icon>mdi-exclamation</v-icon></v-btn>
+												<v-btn v-on="on" class="admin-btn" icon small color="orange" v-if="$root.isAdmin || $root.username == message.name" @click.prevent="reportChat(message.id)"><v-icon>mdi-exclamation</v-icon></v-btn>
 											</template>
 											<span>Report</span>
 										</v-tooltip>
 										<v-tooltip bottom open-delay="1000">
 											<template v-slot:activator="{ on }">
-												<v-btn v-on="on" class="admin-btn" icon text color="warning" v-if="$root.isAdmin || $root.username == message.name" @click.prevent="editor = true, editing = message.id, editMessage = message.content"><v-icon>mdi-pencil</v-icon></v-btn>
+												<v-btn v-on="on" class="admin-btn" icon small color="warning" v-if="$root.isAdmin || $root.username == message.name" @click.prevent="editor = true, editing = message.id, editMessage = message.content"><v-icon>mdi-pencil</v-icon></v-btn>
 											</template>
 											<span>Edit</span>
 										</v-tooltip>
 										<v-tooltip bottom open-delay="1000">
 											<template v-slot:activator="{ on }">
-												<v-btn v-on="on" class="admin-btn" icon text color="error" v-if="$root.isAdmin || $root.username == message.name" @click.prevent="deleteChat(message.id)"><v-icon>mdi-delete</v-icon></v-btn>
+												<v-btn v-on="on" class="admin-btn" icon small color="error" v-if="$root.isAdmin || $root.username == message.name" @click.prevent="deleteChat(message.id)"><v-icon>mdi-delete</v-icon></v-btn>
 											</template>
 											<span>Delete</span>
 										</v-tooltip>
@@ -141,14 +141,14 @@
 						<form @submit.prevent="sendChat" class="new-message" v-if="!editor">
 							<v-layout row text-xs-center align-center justify-center>
 								<v-flex xs12><v-text-field :disabled="!flamechat_enable" class="message-box" autocomplete="off" label="Message..." v-model="newMessage"></v-text-field></v-flex>
-								<v-flex xs1><v-btn :disabled="!flamechat_enable" id="submit" type="submit" text icon><v-icon>mdi-send</v-icon></v-btn></v-flex>
+								<v-flex xs1><v-btn :disabled="!flamechat_enable" id="submit" type="submit" small icon><v-icon>mdi-send</v-icon></v-btn></v-flex>
 							</v-layout>
 						</form>
 						<form @submit.prevent="editChat" class="new-message" v-if="editor">
-							<v-btn id="submit" type="submit" text icon style="float: right; display: inline; position: relative; top: 16px;">
-								<v-icon>mdi-pencil</v-icon>
-							</v-btn>
-							<v-text-field v-model="editMessage" class="message-box" autocomplete="off" label="Edit Message"></v-text-field>
+							<v-layout row text-xs-center align-center justify-center>
+								<v-flex xs12><v-text-field :disabled="!flamechat_enable" class="message-box" autocomplete="off" label="Edit message..." v-model="editMessage"></v-text-field></v-flex>
+								<v-flex xs1><v-btn :disabled="!flamechat_enable" id="submit" type="submit" small icon><v-icon>mdi-pencil</v-icon></v-btn></v-flex>
+							</v-layout>
 						</form>
 					</v-card-actions>
 				</v-card>
@@ -511,6 +511,7 @@ export default {
 	width: 100%;
 	position: relative;
 	bottom: -12px;
+	left: +16px;
 }
 
 .v-card__text {
@@ -534,8 +535,7 @@ export default {
 }
 
 .chat-card ul {
-	margin-left: 0;
-  padding-left: 0;
+  padding-left: 12px;
 }
 
 .chat-card li {
@@ -563,24 +563,11 @@ div.v-input__slot {
 	margin: 0px !important;
 }
 
-div.v-messages {
-	height: 0px !important;
-}
-
 .disabled-card {
 	width: 100%;
 	max-width: 350px;
 	text-align: center;
 	padding: 8px;
 	margin: 64px auto;
-}
-
-.chatroom-name {
-	margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-	text-align: center;
 }
 </style>

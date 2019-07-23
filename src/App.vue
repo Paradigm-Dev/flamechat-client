@@ -9,7 +9,7 @@
         <span>Flamechat</span>
       </div>
       <v-spacer></v-spacer>
-      <div style="-webkit-app-region: no-drag; position: relative; top: +1px;">
+      <div style="-webkit-app-region: no-drag;">
         <v-icon @click="minimize()" v-ripple class="toolbar-icon">mdi-minus</v-icon>
         <v-icon @click="maximized ? unmaximize() : maximize()" v-ripple class="toolbar-icon">mdi-crop-square</v-icon>
         <v-icon @click="close()" v-ripple class="toolbar-icon">mdi-close</v-icon>
@@ -18,15 +18,17 @@
 
 		<!-- Site content -->
 		<v-content>
-      <v-card v-if="!$root.user" max-width="550px" style="margin: auto; margin-top: 170px;">
-        <v-card-title>Sign In</v-card-title>
+      <v-card v-if="!$root.user" max-width="400px" style="margin: auto; margin-top: 170px;" class="elevation-0 background-color">
+        <h5 class="headline text-center">Account</h5>
         <v-card-text>
           <v-form>
             <v-text-field clearable autocomplete="off" type="text" name="username" v-model="$root.username" label="Username"></v-text-field>
             <v-text-field clearable autocomplete="off" type="password" name="password" v-model="password" label="Password"></v-text-field>
-            <v-btn @click="signIn" color="accent" text style="margin: 0px auto 16px auto;">Sign In</v-btn>
+						<div class="text-center">
+							<v-btn @click="signIn" color="grey ligten-3" text style="margin: 0px auto 16px auto;">Sign In</v-btn>
+						</div>
           </v-form>
-          <span>To sign up, visit the website to sign up.</span>
+          <p class="text-center">To sign up, visit the website.</p>
         </v-card-text>
       </v-card>
 			<Flamechat v-if="$root.user" />

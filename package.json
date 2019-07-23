@@ -14,21 +14,21 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@mdi/font": "^3.7.95",
+    "@mdi/font": "^3.8.95",
     "core-js": "^2.6.5",
-    "electron-updater": "^4.0.14",
+    "electron-updater": "^4.1.2",
     "file-saver": "^2.0.2",
     "firebase": "^6.3.1",
     "moment": "^2.24.0",
     "print-js": "^1.0.61",
     "vue": "^2.6.10",
     "vue-chat-scroll": "^1.3.5",
-    "vuetify": "^2.0.0-beta.5"
+    "vuetify": "^2.0.0-beta.9"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.9.0",
-    "@vue/cli-service": "^3.9.0",
-    "electron": "^5.0.0",
+    "@vue/cli-plugin-babel": "^3.9.2",
+    "@vue/cli-service": "^3.9.3",
+    "electron": "^5.0.7",
     "vue-cli-plugin-electron-builder": "^1.3.6",
     "vue-template-compiler": "^2.6.10"
   }
