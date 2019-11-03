@@ -1,13 +1,35 @@
 <template>
-  <v-app dark>
+  <v-app>
     <!-- System toolbar -->
     <v-system-bar app window style="-webkit-app-region: drag;" :class="{ 'deep-orange darken-4': $root.user, 'background-color': !$root.user }">
-      <span class="font-weight-light grey--text lighten-4">Early-access beta</span>
-      <v-spacer></v-spacer>
-      <div class="centralize">
-        <img src="./assets/logo.png" height="18" style="position: relative; top: +2px; margin-right: 5px;">
-        <span>Flamechat</span>
+      <div v-if="!$root.notify.is" style="display: inline-flex !important;">
+        <img @click.left="reload()" src="./assets/logo.png" height="18" style="margin-right: 4px;">
+        <span style="margin-right: 4px">Flamechat</span>
+        <span class="font-weight-light grey--text mr-2">early-access beta</span>
       </div>
+      <span v-if="$root.notify.is">{{ $root.notify.text }}</span>
+			<v-spacer></v-spacer>
+			<v-menu offset-y v-if="$root.user" style="-webkit-app-region: no-drag;">
+				<template v-slot:activator="{ on }">
+					<div class="centralize" style="-webkit-app-region: no-drag;" v-on="on">
+						<v-avatar height="26" width="26" min-width="26" class="mr-2">
+							<img :src="$root.accountPic">
+						</v-avatar>
+						<span class="text-uppercase font-weight-medium" :style="{ 'color': $root.accountColor, 'top': '+1px', 'position': 'relative' }">{{ $root.username }}</span>
+					</div>
+				</template>
+				<v-list dense>
+					<v-list-item @click="$noFunc()">
+						<v-list-item-icon><v-icon class="orange--text">mdi-pencil</v-icon></v-list-item-icon>
+						<v-list-item-title class="orange--text">Edit account</v-list-item-title>
+					</v-list-item>
+					<v-divider></v-divider>
+					<v-list-item @click="signOut()">
+						<v-list-item-icon><v-icon>mdi-logout-variant</v-icon></v-list-item-icon>
+						<v-list-item-title>Sign out</v-list-item-title>
+					</v-list-item>
+				</v-list>
+			</v-menu>
       <v-spacer></v-spacer>
       <div style="-webkit-app-region: no-drag;">
         <v-icon @click="minimize()" v-ripple class="toolbar-icon">mdi-minus</v-icon>
@@ -25,7 +47,7 @@
             <v-text-field clearable autocomplete="off" type="text" name="username" v-model="$root.username" label="Username"></v-text-field>
             <v-text-field clearable autocomplete="off" type="password" name="password" v-model="password" label="Password"></v-text-field>
 						<div class="text-center">
-							<v-btn @click="signIn" color="grey ligten-3" text style="margin: 0px auto 16px auto;">Sign In</v-btn>
+							<v-btn @click="signIn" color="accent" :disabled="!$root.username || !password" text style="margin: 0px auto 16px auto;">Sign In</v-btn>
 						</div>
           </v-form>
           <p class="text-center">To sign up, visit the website.</p>
@@ -33,9 +55,6 @@
       </v-card>
 			<Flamechat v-if="$root.user" />
 		</v-content>
-
-    <!-- Snackbar -->
-		<v-snackbar v-model="$root.snackbar" bottom right :timeout="2000">{{ $root.feedback }}</v-snackbar>
   </v-app>
 </template>
 
@@ -53,7 +72,7 @@ export default {
 		return {
 			win: remote.getCurrentWindow(),
       maximized: remote.getCurrentWindow().isMaximized(),
-      password: ''
+			password: ''
 		}
 	},
   methods: {
@@ -72,7 +91,7 @@ export default {
       this.win.minimize()
     },
     reload() {
-      location.reload()
+      this.win.reload()
     },
     goBack() {
       this.win.webContents.goBack()
@@ -99,7 +118,12 @@ export default {
 			} else {
 				this.$notify('Please fill in the required fields.')
 			}
-    }
+		},
+		signOut() {
+			auth.signOut().then(() => {
+				this.$notify('Signed out successfully.')
+			}).catch(error => this.$notify(error.message))
+		}
   },
   created() {
 		auth.onAuthStateChanged(firebaseUser => {
@@ -215,5 +239,20 @@ html {
 
 .background-color {
   background: #303030 !important;
+}
+
+.v-system-bar.v-system-bar--fixed.v-system-bar--window {
+  padding: 0px 0px 0px 6px !important;
+}
+
+.moonrock-img {
+	height: 50px;
+	margin-bottom: 16px;
+}
+
+.moonrock-count {
+	position: relative;
+	bottom: +36px;
+	padding-left: 5px;
 }
 </style>

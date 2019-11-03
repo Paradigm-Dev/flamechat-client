@@ -34,8 +34,12 @@ Vue.use(Vuetify)
 Vue.mixin({
   methods: {
     $notify(text) {
-      this.$root.feedback = text
-      this.$root.snackbar = true
+      this.$root.notify.text = text
+      this.$root.notify.is = true
+      setTimeout(() => { this.$root.notify.is = false }, 3000)
+    },
+    $noFunc() {
+      this.$notify('This function has not been implemented.')
     }
   }
 })
@@ -45,8 +49,10 @@ new Vue({
   vuetify: new Vuetify(opts),
   data() {
     return {
-      snackbar: false,
-      feedback: '',
+      notify: {
+        is: false,
+        text: ''
+      },
       user: false,
       username: '',
       accountColor: '',
@@ -56,7 +62,11 @@ new Vue({
       isBanned: false,
       strikes: null,
       my_chatrooms: [],
-      accountPic: ''
+      accountPic: '',
+      notify: {
+        is: false,
+        text: ''
+      }
     }
   }
 }).$mount('div#app')    
