@@ -1024,8 +1024,10 @@ import { remote } from "electron";
 import io from "socket.io-client";
 import moment from "moment";
 import { shell } from "electron";
+import Store from "./store.js";
 
 let typingTimeout;
+const store = new Store();
 
 export default {
   name: "App",
@@ -1080,13 +1082,14 @@ export default {
   },
 
   async created() {
-    console.log(remote.app.isPackaged);
-    if (this.$getCookie("jwt")) {
+    console.log(store.get("jwt"));
+    if (store.get("jwt")) {
       this.$http
-        .get(
+        .post(
           remote.app.isPackaged
             ? "https://www.theparadigmdev.com/api/authentication/verify"
-            : "/api/authentication/verify"
+            : "/api/authentication/verify",
+          { jwt: store.get("jwt") }
         )
         .then(async (response) => {
           if (response.data.valid) {
@@ -1143,9 +1146,10 @@ export default {
         )
         .then(async (response) => {
           if (!response.data.errors) {
-            this.$root.user = response.data;
+            this.$root.user = response.data.user;
             this.username = "";
             this.password = "";
+            store.set("jwt", response.data.jwt);
             this.$root.socket.emit("login", this.$root.user.username);
           } else {
             this.$notify(`<span class="red--text">${response.data.msg}</span>`);
@@ -1156,14 +1160,18 @@ export default {
     signOut() {
       if (this.$root.user) {
         this.$root.user = false;
-        this.$http.post(
-          remote.app.isPackaged
-            ? "https://www.theparadigmdev.com/api/authentication/signout"
-            : "/api/authentication/signout",
-          {
-            _id: this.$root.user._id,
-          }
-        );
+        this.$http
+          .post(
+            remote.app.isPackaged
+              ? "https://www.theparadigmdev.com/api/authentication/signout"
+              : "/api/authentication/signout",
+            {
+              _id: this.$root.user._id,
+            }
+          )
+          .then((response) => {
+            store.set("jwt", undefined);
+          });
       }
     },
 
