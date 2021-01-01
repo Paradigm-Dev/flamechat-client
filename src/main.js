@@ -3,6 +3,9 @@ import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import axios from "axios";
 import VueChatScroll from "vue-chat-scroll";
+import io from "socket.io-client";
+
+let socket = io.connect("https://www.theparadigmdev.com");
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
@@ -24,6 +27,14 @@ Vue.mixin({
         }
       }
       return "";
+    },
+    $notify(text) {
+      this.$root.notify.text = text;
+      this.$root.notify.is = true;
+      setTimeout(() => {
+        this.$root.notify.text = "";
+        this.$root.notify.is = false;
+      }, 3000);
     }
   }
 });
@@ -37,7 +48,8 @@ new Vue({
         is: false,
         text: ""
       },
-      user: false
+      user: false,
+      socket
     };
   }
 }).$mount("#app");

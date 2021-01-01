@@ -6,6 +6,7 @@
       window
       style="-webkit-app-region: drag; -webkit-user-select: none"
       height="38"
+      :class="{ 'elevation-3': $root.user }"
       :color="$root.user ? '#164E63' : 'transparent'"
       class="pr-0"
     >
@@ -69,7 +70,7 @@
       window
       style="-webkit-app-region: drag"
       height="38"
-      class="elevation-3"
+      :class="{ 'elevation-3': $root.user }"
       :color="$root.user ? '#164E63' : 'transparent'"
     >
       <div
@@ -1083,6 +1084,7 @@ export default {
       this.$http.get("/api/authentication/verify").then(async (response) => {
         if (response.data.valid) {
           this.$root.user = response.data.user;
+          this.$root.socket.emit("login", this.$root.user.username);
         }
       });
     }
@@ -1092,6 +1094,17 @@ export default {
       .then((response) => {
         this.all_people = response.data;
       });
+    this.$root.socket.on("user", (data) => {
+      if (data.strikes != this.$root.user.strikes)
+        this.$notify(
+          `You have ${data.strikes} strikes!`,
+          "orange--text",
+          "mdi-gavel",
+          3000
+        );
+      if (this.$root.router !== "error" && this.$root.user !== data)
+        this.$root.user = data;
+    });
   },
   methods: {
     close() {
@@ -1121,6 +1134,7 @@ export default {
             this.$root.user = response.data;
             this.username = "";
             this.password = "";
+            this.$root.socket.emit("login", this.$root.user.username);
           } else {
             this.$notify(`<span class="red--text">${response.data.msg}</span>`);
           }
@@ -1170,7 +1184,7 @@ export default {
         this.current.messages[index] = data;
       });
       this.socket.on("kill", async () => {
-        this.leaveChatroom();
+        this.leaveChatroom(true);
       });
       this.socket.on("typing", (data) => {
         let filteredData = data;
@@ -1320,8 +1334,8 @@ export default {
         })
         .catch((error) => console.error(error));
     },
-    leaveChatroom() {
-      if (this.$root.user._id != this.current.owner) {
+    leaveChatroom(force) {
+      if (this.$root.user._id != this.current.owner && !force) {
         this.$http
           .get(
             `https://www.theparadigmdev.com/api/users/${this.$root.user._id}/chatroom/${this.current.id}/leave`
@@ -1353,7 +1367,7 @@ export default {
         this.$root.user.rights.admin == true
       ) {
         this.socket.emit("kill");
-        this.leaveChatroom();
+        this.leaveChatroom(true);
         this.$notify("Chatroom deleted", "whit--text", "mdi-delete", 3000);
         this.delete_verify_popup = false;
         await this.$http.get(
