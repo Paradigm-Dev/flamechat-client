@@ -6,19 +6,19 @@ module.exports = {
       removeElectronJunk: false,
       nodeIntegration: true,
       builderOptions: {
-        productName: "Flamechat",
+        productName: "Wire",
         mac: {
           darkModeSupport: true
         },
         dmg: {
-          artifactName: "Flamechat-v${version}.${ext}",
-          title: "Flamechat"
+          artifactName: "Wire-v${version}.${ext}",
+          title: "Wire"
         },
         nsis: {
-          artifactName: "Flamechat-v${version}.${ext}",
+          artifactName: "Wire-v${version}.${ext}",
           deleteAppDataOnUninstall: true,
-          shortcutName: "Flamechat",
-          uninstallDisplayName: "Flamechat"
+          shortcutName: "Wire",
+          uninstallDisplayName: "Wire"
         }
       }
     }

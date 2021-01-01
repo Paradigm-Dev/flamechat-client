@@ -6,7 +6,7 @@
       window
       style="-webkit-app-region: drag; -webkit-user-select: none"
       height="38"
-      :color="$root.user ? 'deep-orange darken-3' : 'transparent'"
+      :color="$root.user ? '#164E63' : 'transparent'"
       class="pr-0"
     >
       <v-fade-transition group leave-absolute>
@@ -16,10 +16,10 @@
           style="display: inline-flex !important; margin-left: 2px"
         >
           <img
-            src="./assets/paradigm.png"
+            src="./assets/logo.png"
             style="margin-right: 4px; margin-top: 3px; height: 18px"
           />
-          <span style="margin-top: 2px">Flamechat</span>
+          <span style="margin-top: 2px">Wire</span>
         </div>
         <span
           key="notification"
@@ -50,7 +50,8 @@
       window
       style="-webkit-app-region: drag"
       height="38"
-      :color="$root.user ? 'deep-orange darken-3' : 'transparent'"
+      class="elevation-3"
+      :color="$root.user ? '#164E63' : 'transparent'"
     >
       <div
         style="height: 12px; width: 12px; border-radius: 12px"
@@ -77,10 +78,10 @@
           style="display: inline-flex !important"
         >
           <img
-            src="./assets/paradigm.png"
+            src="./assets/logo.png"
             style="height: 24px; margin-right: 4px; margin-top: 1px"
           />
-          <span style="margin-right: 4px; margin-top: 3px">Flamechat</span>
+          <span style="margin-right: 4px; margin-top: 3px">Wire</span>
         </div>
         <p
           key="notification"
@@ -262,10 +263,19 @@
                       >Click to sign out</v-list-item-subtitle
                     >
                   </v-list-item-content>
+
+                  <v-list-item-action>
+                    <v-btn icon @click="drawer = !drawer"
+                      ><v-icon>{{
+                        drawer ? "mdi-chevron-left" : "mdi-chevron-right"
+                      }}</v-icon></v-btn
+                    >
+                  </v-list-item-action>
                 </v-list-item>
               </v-list>
 
               <v-btn
+                v-if="!drawer"
                 fab
                 fixed
                 bottom
