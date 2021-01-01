@@ -13,13 +13,31 @@
         <div
           key="logo"
           v-if="!$root.notify.is"
-          style="display: inline-flex !important; margin-left: 2px"
+          style="display: inline-flex !important; margin-left: 2px; z-index: 10"
         >
           <img
             src="./assets/logo.png"
             style="margin-right: 4px; margin-top: 3px; height: 18px"
           />
-          <span style="margin-top: 2px">Wire</span>
+          <span style="margin-top: 2px" class="mr-2">Wire</span>
+          <v-icon
+            style="-webkit-app-region: no-drag"
+            class="toolbar-icon grey--text text--lighten-1"
+            @click="leaveChatroom()"
+            v-if="
+              current && !current_dm_person && current.owner != $root.user._id
+            "
+            v-ripple
+            >mdi-arrow-expand-left</v-icon
+          >
+          <v-icon
+            style="-webkit-app-region: no-drag"
+            class="toolbar-icon grey--text text--lighten-1"
+            @click="deleteChatroom()"
+            v-if="current && !current_dm_person"
+            v-ripple
+            >mdi-delete</v-icon
+          >
         </div>
         <span
           key="notification"
@@ -27,6 +45,7 @@
           v-html="$root.notify.text"
         ></span>
       </v-fade-transition>
+
       <v-spacer></v-spacer>
       <div style="-webkit-app-region: no-drag; margin-bottom: 1px">
         <v-icon @click="minimize()" v-ripple class="toolbar-icon"
