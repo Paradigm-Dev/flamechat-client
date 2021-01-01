@@ -1,20 +1,19 @@
-# Flamechat Desktop Client
-A lightweight chatting app built for the modern web.
+# flamechat-client
 
-### NOTICE
-This project is no longer being maintained. Please use the Flamechat web client. We may restart this project in the future.
-
-## Package installation
+## Project setup
 ```
 npm install
 ```
 
-### Compile for development
+### Compiles and hot-reloads for development
 ```
 npm run serve
 ```
 
-### Compile and minify for production
+### Compiles and minifies for production
 ```
 npm run build
 ```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

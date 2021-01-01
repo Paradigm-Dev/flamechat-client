@@ -1,72 +1,43 @@
-import Vue from 'vue'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
-import '@mdi/font/css/materialdesignicons.css'
-import App from './App.vue'
-import VueChatScroll from 'vue-chat-scroll'
+import Vue from "vue";
+import App from "./App.vue";
+import vuetify from "./plugins/vuetify";
+import axios from "axios";
+import VueChatScroll from "vue-chat-scroll";
 
-Vue.use(VueChatScroll)
-
-const opts = {
-  icons: {
-    iconfont: 'mdi'
-  },
-  theme: {
-    dark: true,
-    themes: {
-      dark: {
-        primary: '#1976D2',
-        secondary: '#424242',
-        accent: '#82B1FF',
-        error: '#FF5252',
-        info: '#2196F3',
-        success: '#4CAF50',
-        warning: '#FFC107'
-      }
-    }
-  }
-}
-
-Vue.config.productionTip = false
-
-Vue.use(Vuetify)
+Vue.config.productionTip = false;
+Vue.prototype.$http = axios;
+Vue.use(VueChatScroll);
 
 Vue.mixin({
   methods: {
-    $notify(text) {
-      this.$root.notify.text = text
-      this.$root.notify.is = true
-      setTimeout(() => { this.$root.notify.is = false }, 3000)
-    },
-    $noFunc() {
-      this.$notify('This function has not been implemented.')
+    $getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(";");
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
     }
   }
-})
+});
 
 new Vue({
-  render: function(h) { return h(App) },
-  vuetify: new Vuetify(opts),
+  vuetify,
+  render: h => h(App),
   data() {
     return {
       notify: {
         is: false,
-        text: ''
+        text: ""
       },
-      user: false,
-      username: '',
-      accountColor: '',
-      moonrocks: null,
-      isAdmin: false,
-      isInnerCore: false,
-      isBanned: false,
-      strikes: null,
-      my_chatrooms: [],
-      accountPic: '',
-      notify: {
-        is: false,
-        text: ''
-      }
-    }
+      user: false
+    };
   }
-}).$mount('div#app')    
+}).$mount("#app");
