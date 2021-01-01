@@ -1080,13 +1080,20 @@ export default {
   },
 
   async created() {
+    console.log(remote.app.isPackaged);
     if (this.$getCookie("jwt")) {
-      this.$http.get("/api/authentication/verify").then(async (response) => {
-        if (response.data.valid) {
-          this.$root.user = response.data.user;
-          this.$root.socket.emit("login", this.$root.user.username);
-        }
-      });
+      this.$http
+        .get(
+          remote.app.isPackaged
+            ? "https://www.theparadigmdev.com/api/authentication/verify"
+            : "/api/authentication/verify"
+        )
+        .then(async (response) => {
+          if (response.data.valid) {
+            this.$root.user = response.data.user;
+            this.$root.socket.emit("login", this.$root.user.username);
+          }
+        });
     }
     if (this.$vuetify.breakpoint.mdAndUp) this.drawer = true;
     this.$http
@@ -1124,11 +1131,16 @@ export default {
 
     signIn() {
       this.$http
-        .post("/api/authentication/signin", {
-          username: this.username.toLowerCase(),
-          password: this.password,
-          sticky: this.sticky,
-        })
+        .post(
+          remote.app.isPackaged
+            ? "https://www.theparadigmdev.com/api/authentication/signin"
+            : "/api/authentication/signin",
+          {
+            username: this.username.toLowerCase(),
+            password: this.password,
+            sticky: this.sticky,
+          }
+        )
         .then(async (response) => {
           if (!response.data.errors) {
             this.$root.user = response.data;
@@ -1144,9 +1156,14 @@ export default {
     signOut() {
       if (this.$root.user) {
         this.$root.user = false;
-        this.$http.post("/api/authentication/signout", {
-          _id: this.$root.user._id,
-        });
+        this.$http.post(
+          remote.app.isPackaged
+            ? "https://www.theparadigmdev.com/api/authentication/signout"
+            : "/api/authentication/signout",
+          {
+            _id: this.$root.user._id,
+          }
+        );
       }
     },
 
