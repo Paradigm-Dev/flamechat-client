@@ -147,12 +147,7 @@
             <h1 class="text-h4 grey--text text--lighten-1">
               Sign in to your account
             </h1>
-            <p
-              class="text--grey text--darken-4 font-weight-light ma-0 subtitle-2"
-            >
-              Or <a class="text--grey text--darken-4"> create an account</a>
-            </p></v-card-title
-          >
+          </v-card-title>
           <v-card-text>
             <v-text-field
               hide-details
@@ -971,7 +966,6 @@ export default {
   },
 
   async created() {
-    console.log(store.get("jwt"));
     if (store.get("jwt")) {
       this.$http
         .post(
