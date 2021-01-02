@@ -353,13 +353,7 @@
             >
               <v-navigation-drawer
                 :style="{
-                  width: $vuetify.breakpoint.smAndDown
-                    ? !drawer
-                      ? '56px !important'
-                      : '56px !important'
-                    : !drawer
-                    ? '256px !important'
-                    : '56px !important',
+                  width: !drawer ? '256px !important' : '56px !important',
                   height: 'calc(100vh - 38px)',
                 }"
                 permanent
@@ -411,161 +405,108 @@
               </v-navigation-drawer>
 
               <!-- CHAT LIST -->
-              <v-list
-                :style="{
-                  height: 'calc(100vh - 104px)',
-
-                  overflowY: 'auto',
-                  width: $vuetify.breakpoint.smAndDown
-                    ? drawer
-                      ? 'calc(100vw - 312px)'
-                      : 'calc(100vw - 112px)'
-                    : 'calc(100vw - 312px)',
-                }"
-                v-if="
-                  current &&
-                  ($vuetify.breakpoint.smAndDown
-                    ? drawer
-                      ? false
-                      : true
-                    : true)
-                "
-                class="transparent"
+              <div
+                v-if="current"
                 v-chat-scroll="{ always: false, smooth: true }"
+                style="
+                  height: calc(100vh - 104px);
+                  width: calc(100vw - 312px) !important;
+                  overflow: auto;
+                  padding: 16px;
+                "
               >
-                <v-fade-transition group>
-                  <!-- CHAT LIST ITEM -->
-                  <v-list-item
-                    v-for="(message, index) in current.messages"
-                    :key="index"
-                    @mouseover="current_message = message"
-                    @mouseleave="current_message = false"
+                <div
+                  v-for="(message, index) in current.messages"
+                  :key="message._id"
+                  @mouseover="current_message = index"
+                  @mouseleave="current_message = false"
+                  class="d-flex"
+                  style="position: relative"
+                >
+                  <img
+                    style="border-radius: 40px"
+                    class="mt-1"
+                    height="40"
+                    width="40"
+                    :src="`https://www.theparadigmdev.com/relay/profile-pics/${message.user_id}.png`"
+                  />
+                  <div
+                    class="ml-3"
+                    style="flex-grow: 1; width: calc(100% - 125px)"
                   >
-                    <v-list-item-avatar style="align-self: start" class="mt-4">
-                      <v-img
-                        :src="`https://www.theparadigmdev.com/relay/profile-pics/${message.user_id}.png`"
-                      ></v-img>
-                    </v-list-item-avatar>
-
-                    <!-- TYPE="MESSAGE" CHAT -->
-                    <v-list-item-content
-                      style="max-width: 90%"
+                    <p class="mb-0">
+                      <span
+                        class="font-weight-medium"
+                        :style="{ color: message.color }"
+                      >
+                        {{ message.username }}
+                      </span>
+                      <span class="caption grey--text font-weight-light ml-1">
+                        {{ message.timestamp }}
+                      </span>
+                      <span
+                        class="caption grey--text font-weight-light ml-1"
+                        v-if="message.edits != 0 && message.type == 'message'"
+                        >•<span class="pl-1">
+                          {{ message.edits }}
+                          {{ message.edits > 1 ? "edits" : "edit" }}
+                        </span>
+                      </span>
+                    </p>
+                    <p
                       v-if="message.type == 'message'"
-                    >
-                      <v-list-item-title class="font-weight-medium">
-                        <span :style="{ color: message.color }">{{
-                          message.username
-                        }}</span>
-                        <span class="caption grey--text font-weight-light ml-1">
-                          {{ message.timestamp }}
-                        </span>
-                        <span
-                          class="caption grey--text font-weight-light ml-1"
-                          v-if="message.edits != 0"
-                          >•<span class="pl-1">
-                            {{ message.edits }}
-                            {{ message.edits > 1 ? "edits" : "edit" }}
-                          </span>
-                        </span>
-                      </v-list-item-title>
-                      <p
-                        class="pa-0 ma-0 grey--text text--lighten-2"
-                        style="word-wrap: break-word"
-                        v-html="message.content"
-                      ></p>
-                    </v-list-item-content>
-
-                    <!-- TYPE="FILE" CHAT -->
-                    <v-list-item-content
-                      style="max-width: 90%"
+                      v-html="message.content"
+                    ></p>
+                    <v-card
                       v-if="message.type == 'file'"
+                      @click="window.open(message.url)"
+                      max-width="350"
                     >
-                      <v-list-item-title class="font-weight-medium">
-                        <span :style="{ color: message.color }">{{
-                          message.username
-                        }}</span>
-                        <span class="caption grey--text font-weight-light ml-1">
-                          {{ message.timestamp }}
-                        </span>
-                      </v-list-item-title>
-                      <v-card @click="window.open(message.url)">
-                        <h5 class="text-h5">{{ message.content }}</h5>
-                      </v-card>
-                    </v-list-item-content>
-
-                    <!-- TYPE="MEDIA" CHAT -->
-                    <v-list-item-content
-                      style="max-width: 90%"
-                      v-if="message.type == 'image' || message.type == 'video'"
+                      <v-card-title>{{ message.content }}</v-card-title>
+                    </v-card>
+                    <img
+                      v-if="message.type == 'image'"
+                      :src="message.url"
+                      style="max-width: 40vw"
+                    />
+                    <video
+                      v-if="message.type == 'video'"
+                      controls
+                      :src="message.url"
+                    ></video>
+                  </div>
+                  <div
+                    style="position: absolute; top: 0px; right: 0px"
+                    v-if="
+                      current_message == index
+                        ? message.user_id == $root.user._id
+                          ? true
+                          : current.owner == $root.user._id
+                          ? true
+                          : $root.user.rights.admin
+                          ? true
+                          : false
+                        : false
+                    "
+                  >
+                    <v-btn
+                      small
+                      icon
+                      color="grey darken-2"
+                      v-if="message.type == 'message'"
+                      @click="editChat(message)"
+                      ><v-icon>mdi-pencil</v-icon></v-btn
                     >
-                      <v-list-item-title class="font-weight-medium">
-                        <span :style="{ color: message.color }">{{
-                          message.username
-                        }}</span>
-                        <span class="caption grey--text font-weight-light ml-1">
-                          {{ message.timestamp }}
-                        </span>
-                      </v-list-item-title>
-                      <img
-                        v-if="message.type == 'image'"
-                        :src="message.url"
-                        style="max-width: 40vw"
-                      />
-                      <video
-                        v-if="message.type == 'video'"
-                        controls
-                        :src="message.url"
-                      ></video>
-                    </v-list-item-content>
-
-                    <!-- CHAT CONTROLS -->
-                    <v-fade-transition
-                      group
-                      style="align-self: start"
-                      class="mt-3"
+                    <v-btn
+                      small
+                      icon
+                      color="grey darken-2"
+                      @click="deleteChat(message)"
+                      ><v-icon>mdi-delete</v-icon></v-btn
                     >
-                      <v-btn
-                        key="edit"
-                        v-if="
-                          current_message == message
-                            ? message.user_id == $root.user._id
-                              ? true
-                              : current.owner == $root.user._id
-                              ? true
-                              : $root.user.rights.admin
-                              ? true
-                              : false
-                            : false
-                        "
-                        small
-                        icon
-                        color="grey darken-3"
-                        @click="editChat(message)"
-                        ><v-icon>mdi-pencil</v-icon></v-btn
-                      >
-                      <v-btn
-                        key="delete"
-                        v-if="
-                          current_message == message
-                            ? message.user_id == $root.user._id
-                              ? true
-                              : current.owner == $root.user._id
-                              ? true
-                              : $root.user.rights.admin
-                              ? true
-                              : false
-                            : false
-                        "
-                        small
-                        icon
-                        color="grey darken-3"
-                        @click="deleteChat(message)"
-                        ><v-icon>mdi-delete</v-icon></v-btn
-                      >
-                    </v-fade-transition>
-                  </v-list-item>
-                </v-fade-transition>
-              </v-list>
+                  </div>
+                </div>
+              </div>
             </section>
 
             <!-- CHATROOM VIEW -->
@@ -575,172 +516,109 @@
               key="chatroom"
             >
               <!-- CHAT LIST -->
-              <v-list
-                :style="{
-                  height: 'calc(100vh - 104px)',
-
-                  overflowY: 'auto',
-                }"
-                class="transparent"
+              <div
+                v-if="current"
                 v-chat-scroll="{ always: false, smooth: true }"
-                v-if="
-                  $vuetify.breakpoint.smAndDown ? (drawer ? false : true) : true
+                style="
+                  height: calc(100vh - 104px);
+                  width: calc(100vw - 312px) !important;
+                  overflow: auto;
+                  padding: 16px;
                 "
               >
-                <v-fade-transition group>
-                  <!-- CHAT LIST ITEM -->
-                  <v-list-item
-                    v-for="(message, index) in current.messages"
-                    :key="index"
-                    @mouseover="current_message = message"
-                    @mouseleave="current_message = false"
+                <div
+                  v-for="(message, index) in current.messages"
+                  :key="message._id"
+                  @mouseover="current_message = index"
+                  @mouseleave="current_message = false"
+                  class="d-flex"
+                  style="position: relative"
+                >
+                  <img
+                    style="border-radius: 40px"
+                    class="mt-1"
+                    height="40"
+                    width="40"
+                    :src="`https://www.theparadigmdev.com/relay/profile-pics/${message.user_id}.png`"
+                  />
+                  <div
+                    class="ml-3"
+                    style="flex-grow: 1; width: calc(100% - 125px)"
                   >
-                    <v-list-item-avatar style="align-self: start" class="mt-4">
-                      <v-img
-                        :src="`https://www.theparadigmdev.com/relay/profile-pics/${message.user_id}.png`"
-                      ></v-img>
-                    </v-list-item-avatar>
-
-                    <!-- TYPE="MESSAGE" CHAT -->
-                    <v-list-item-content
-                      class="py-2"
-                      style="max-width: 90%"
+                    <p class="mb-0">
+                      <span
+                        class="font-weight-medium"
+                        :style="{ color: message.color }"
+                      >
+                        {{ message.username }}
+                      </span>
+                      <span class="caption grey--text font-weight-light ml-1">
+                        {{ message.timestamp }}
+                      </span>
+                      <span
+                        class="caption grey--text font-weight-light ml-1"
+                        v-if="message.edits != 0 && message.type == 'message'"
+                        >•<span class="pl-1">
+                          {{ message.edits }}
+                          {{ message.edits > 1 ? "edits" : "edit" }}
+                        </span>
+                      </span>
+                    </p>
+                    <p
                       v-if="message.type == 'message'"
-                    >
-                      <v-list-item-title class="font-weight-medium">
-                        <span :style="{ color: message.color }">{{
-                          message.username
-                        }}</span>
-                        <span class="caption grey--text font-weight-light ml-1">
-                          {{ message.timestamp }}
-                        </span>
-                        <span
-                          class="caption grey--text font-weight-light ml-1"
-                          v-if="message.edits != 0"
-                          >•<span class="pl-1">
-                            {{ message.edits }}
-                            {{ message.edits > 1 ? "edits" : "edit" }}
-                          </span>
-                        </span>
-                      </v-list-item-title>
-                      <p
-                        class="pa-0 ma-0 grey--text text--lighten-2"
-                        style="word-wrap: break-word"
-                        v-html="message.content"
-                      ></p>
-                    </v-list-item-content>
-
-                    <!-- TYPE="FILE" CHAT -->
-                    <v-list-item-content
-                      style="max-width: 90%"
+                      v-html="message.content"
+                    ></p>
+                    <v-card
                       v-if="message.type == 'file'"
+                      @click="window.open(message.url)"
+                      max-width="350"
                     >
-                      <v-list-item-title class="font-weight-medium">
-                        <span :style="{ color: message.color }">{{
-                          message.username
-                        }}</span>
-                        <span class="caption grey--text font-weight-light ml-1">
-                          {{ message.timestamp }}
-                        </span>
-                      </v-list-item-title>
-                      <v-card @click="window.open(message.url)" max-width="350">
-                        <v-card-title>{{ message.content }}</v-card-title>
-                      </v-card>
-                    </v-list-item-content>
-
-                    <!-- TYPE="MEDIA" CHAT -->
-                    <v-list-item-content
-                      style="max-width: 90%"
-                      v-if="message.type == 'image' || message.type == 'video'"
+                      <v-card-title>{{ message.content }}</v-card-title>
+                    </v-card>
+                    <img
+                      v-if="message.type == 'image'"
+                      :src="message.url"
+                      style="max-width: 40vw"
+                    />
+                    <video
+                      v-if="message.type == 'video'"
+                      controls
+                      :src="message.url"
+                    ></video>
+                  </div>
+                  <div
+                    style="position: absolute; top: 0px; right: 0px"
+                    v-if="
+                      current_message == index
+                        ? message.user_id == $root.user._id
+                          ? true
+                          : current.owner == $root.user._id
+                          ? true
+                          : $root.user.rights.admin
+                          ? true
+                          : false
+                        : false
+                    "
+                  >
+                    <v-btn
+                      small
+                      icon
+                      color="grey darken-2"
+                      v-if="message.type == 'message'"
+                      @click="editChat(message)"
+                      ><v-icon>mdi-pencil</v-icon></v-btn
                     >
-                      <v-list-item-title class="font-weight-medium">
-                        <span :style="{ color: message.color }">{{
-                          message.username
-                        }}</span>
-                        <span class="caption grey--text font-weight-light ml-1">
-                          {{ message.timestamp }}
-                        </span>
-                      </v-list-item-title>
-                      <img
-                        v-if="message.type == 'image'"
-                        :src="message.url"
-                        style="max-width: 40vw"
-                      />
-                      <video
-                        v-if="message.type == 'video'"
-                        controls
-                        :src="message.url"
-                      ></video>
-                    </v-list-item-content>
-
-                    <!-- TYPE="LEFT" CHAT -->
-                    <v-list-item-subtitle
-                      class="text-center"
-                      v-if="message.type === 'left'"
-                      ><span :style="{ color: message.color }">{{
-                        message.username
-                      }}</span>
-                      has left</v-list-item-subtitle
+                    <v-btn
+                      small
+                      icon
+                      color="grey darken-2"
+                      @click="deleteChat(message)"
+                      ><v-icon>mdi-delete</v-icon></v-btn
                     >
-
-                    <!-- TYPE="JOIN" CHAT -->
-                    <v-list-item-subtitle
-                      class="text-center"
-                      v-if="message.type === 'join'"
-                      ><span :style="{ color: message.color }">{{
-                        message.username
-                      }}</span>
-                      has joined</v-list-item-subtitle
-                    >
-
-                    <!-- CHAT CONTROLS -->
-                    <v-fade-transition
-                      group
-                      style="align-self: start"
-                      class="mt-3"
-                    >
-                      <v-btn
-                        key="edit"
-                        v-if="
-                          current_message == message
-                            ? message.user_id == $root.user._id
-                              ? true
-                              : current.owner == $root.user._id
-                              ? true
-                              : $root.user.rights.admin
-                              ? true
-                              : false
-                            : false
-                        "
-                        small
-                        icon
-                        color="grey darken-3"
-                        @click="editChat(message)"
-                        ><v-icon>mdi-pencil</v-icon></v-btn
-                      >
-                      <v-btn
-                        key="delete"
-                        v-if="
-                          current_message == message
-                            ? message.user_id == $root.user._id
-                              ? true
-                              : current.owner == $root.user._id
-                              ? true
-                              : $root.user.rights.admin
-                              ? true
-                              : false
-                            : false
-                        "
-                        small
-                        icon
-                        color="grey darken-3"
-                        @click="deleteChat(message)"
-                        ><v-icon>mdi-delete</v-icon></v-btn
-                      >
-                    </v-fade-transition>
-                  </v-list-item>
-                </v-fade-transition>
-              </v-list>
+                  </div>
+                </div>
+              </div>
+            </section>
             </section>
 
             <!-- NEW CHAT FOOTER -->
@@ -784,7 +662,7 @@
               key="footer"
             >
               <!-- <v-fade-transition leave-absolute v-if="current_status == 'approved'"> -->
-              <v-fade-transition>
+              <v-fade-transition hide-on-leave>
                 <span
                   class="mb-n2 grey--text font-italic text-body-2"
                   v-if="typers.length > 0"
@@ -799,7 +677,11 @@
                 >
               </v-fade-transition>
 
-              <v-row no-gutters align="baseline">
+              <v-row
+                no-gutters
+                align="baseline"
+                :style="{ 'margin-top': typers.length > 0 ? '0px' : '24px' }"
+              >
                 <v-col cols="10">
                   <v-text-field
                     style="width: 100%"
@@ -1275,8 +1157,9 @@ export default {
             timestamp: moment().format("MM/DD/YYYY [at] h:mm a"),
             content: this.upload.file[0].name,
             url: this.current_dm_person
-              ? `https://www.theparadigmdev.com/relay/wire/dm/${this.current_id}/${this.upload.file[0].name}`
-              : `https://www.theparadigmdev.com/relay/wire/chatroom/${this.current_id}/${this.upload.file[0].name}`,
+              ? // TODO(use wire endpoints)
+                `https://www.theparadigmdev.com/relay/flamechat/dm/${this.current_id}/${this.upload.file[0].name}`
+              : `https://www.theparadigmdev.com/relay/flamechat/chatroom/${this.current_id}/${this.upload.file[0].name}`,
             type: "",
           };
           if (this.upload.file[0].type.includes("image")) data.type = "image";
@@ -1436,5 +1319,6 @@ footer {
   position: absolute;
   bottom: 0px;
   padding: 0px 16px 16px 16px;
+  height: 91px !important;
 }
 </style>

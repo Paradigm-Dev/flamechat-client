@@ -51,5 +51,25 @@ new Vue({
       user: false,
       socket
     };
+  },
+  created() {
+    // Check for service worker
+    if ("serviceWorker" in navigator) {
+      registerServiceWorker().catch(err => console.error(err));
+    }
+
+    let that = this;
+    // Register SW, Register Push, Send Push
+    async function registerServiceWorker() {
+      // Register Service Worker
+      console.log("Registering service worker...");
+      that.$root.worker = await navigator.serviceWorker.register(
+        `${process.env.BASE_URL}worker.js`,
+        {
+          scope: "/"
+        }
+      );
+      console.log("Service Worker Registered...");
+    }
   }
 }).$mount("#app");
