@@ -407,12 +407,16 @@
               <!-- CHAT LIST -->
               <div
                 v-if="current"
-                v-chat-scroll="{ always: false, smooth: true }"
+                v-chat-scroll="{
+                  always: false,
+                  smooth: true,
+                  notSmoothOnInit: true,
+                }"
                 style="
-                  height: calc(100vh - 104px);
+                  height: calc(100vh - 136px);
                   width: calc(100vw - 312px) !important;
                   overflow: auto;
-                  padding: 16px;
+                  padding: 16px 16px 0px 16px;
                 "
               >
                 <div
@@ -518,12 +522,16 @@
               <!-- CHAT LIST -->
               <div
                 v-if="current"
-                v-chat-scroll="{ always: false, smooth: true }"
+                v-chat-scroll="{
+                  always: false,
+                  smooth: true,
+                  notSmoothOnInit: true,
+                }"
                 style="
-                  height: calc(100vh - 104px);
+                  height: calc(100vh - 136px);
                   width: calc(100vw - 312px) !important;
                   overflow: auto;
-                  padding: 16px;
+                  padding: 16px 16px 0px 16px;
                 "
               >
                 <div
@@ -619,7 +627,6 @@
                 </div>
               </div>
             </section>
-            </section>
 
             <!-- NEW CHAT FOOTER -->
             <footer
@@ -662,10 +669,8 @@
               key="footer"
             >
               <!-- <v-fade-transition leave-absolute v-if="current_status == 'approved'"> -->
-              <v-fade-transition hide-on-leave>
-                <span
-                  class="mb-n2 grey--text font-italic text-body-2"
-                  v-if="typers.length > 0"
+              <v-fade-transition hide-on-leave v-if="typers.length > 0">
+                <span class="mb-n2 grey--text font-italic text-body-2"
                   ><span
                     v-for="(user, index) in typers"
                     :key="index"
@@ -680,7 +685,9 @@
               <v-row
                 no-gutters
                 align="baseline"
-                :style="{ 'margin-top': typers.length > 0 ? '0px' : '24px' }"
+                :style="{
+                  'margin-top': typers.length > 0 ? '0px' : '24px',
+                }"
               >
                 <v-col cols="10">
                   <v-text-field
@@ -1041,7 +1048,6 @@ export default {
     },
     signOut() {
       if (this.$root.user) {
-        this.$root.user = false;
         this.$http
           .post(
             remote.app.isPackaged
@@ -1052,7 +1058,10 @@ export default {
             }
           )
           .then((response) => {
-            store.set("jwt", undefined);
+            this.$root.socket.disconnect();
+            this.$root.socket = io.connect("https://www.theparadigmdev.com");
+            store.set("jwt", false);
+            this.$root.user = false;
           });
       }
     },
