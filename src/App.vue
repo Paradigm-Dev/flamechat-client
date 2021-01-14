@@ -322,6 +322,7 @@
               </p>
               <div style="max-width: 150px; margin: auto">
                 <v-btn
+                  color="#0C4A6E"
                   x-large
                   class="mt-8"
                   block
@@ -330,6 +331,7 @@
                   <v-icon left>mdi-plus</v-icon>Create
                 </v-btn>
                 <v-btn
+                  color="#0C4A6E"
                   x-large
                   block
                   class="mt-2"
@@ -739,9 +741,7 @@
                 >Delete</v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn text color="blue accent-1" @click="editChatSave()"
-                >Save</v-btn
-              >
+              <v-btn text color="#0369A1" @click="editChatSave()">Save</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -770,9 +770,7 @@
                 >Cancel</v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn @click="sendFile()" color="blue accent-1" text
-                >Upload</v-btn
-              >
+              <v-btn @click="sendFile()" color="#0369A1" text>Upload</v-btn>
             </v-card-actions>
             <v-progress-linear
               :active="upload.loading"
@@ -805,9 +803,7 @@
                 >Cancel</v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn @click="joinChatroom()" color="blue accent-1" text
-                >Join</v-btn
-              >
+              <v-btn @click="joinChatroom()" color="#0369A1" text>Join</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -831,7 +827,7 @@
                 @click="
                   $subscribe(), (notify_allow = { open: false, accept: true })
                 "
-                color="blue accent-1"
+                color="#0369A1"
                 text
                 >Accept</v-btn
               >
@@ -919,9 +915,7 @@
                 >Cancel</v-btn
               >
               <v-spacer></v-spacer>
-              <v-btn @click="buyChatroom()" color="blue accent-1" text
-                >Buy</v-btn
-              >
+              <v-btn @click="buyChatroom()" color="#0369A1" text>Buy</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
