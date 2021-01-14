@@ -7,7 +7,7 @@
       style="-webkit-app-region: drag; -webkit-user-select: none"
       height="38"
       :class="{ 'elevation-3': $root.user }"
-      :color="$root.user ? '#164E63' : 'transparent'"
+      :color="$root.user ? '#0C4A6E' : 'transparent'"
       class="pr-0"
     >
       <v-fade-transition group leave-absolute>
@@ -71,7 +71,7 @@
       style="-webkit-app-region: drag"
       height="38"
       :class="{ 'elevation-3': $root.user }"
-      :color="$root.user ? '#164E63' : 'transparent'"
+      :color="$root.user ? '#0C4A6E' : 'transparent'"
     >
       <div
         style="height: 12px; width: 12px; border-radius: 12px"
@@ -418,7 +418,7 @@
                   v-for="(message, index) in current.messages"
                   :key="message._id"
                   @mouseover="current_message = index"
-                  @mouseleave="current_message = false"
+                  @mouseleave="current_message = -1"
                   class="d-flex"
                   style="position: relative"
                 >
@@ -524,7 +524,6 @@
                 }"
                 style="
                   height: calc(100vh - 136px);
-                  width: calc(100vw - 312px) !important;
                   overflow: auto;
                   padding: 16px 16px 0px 16px;
                 "
@@ -533,7 +532,7 @@
                   v-for="(message, index) in current.messages"
                   :key="message._id"
                   @mouseover="current_message = index"
-                  @mouseleave="current_message = false"
+                  @mouseleave="current_message = -1"
                   class="d-flex"
                   style="position: relative"
                 >
@@ -785,7 +784,7 @@
           </v-card>
         </v-dialog>
 
-        <!-- FILE UPLOAD DIALOG -->
+        <!-- JOIN DIALOG -->
         <v-dialog v-model="add_chatroom.open" max-width="350">
           <v-card>
             <v-card-title class="text-h5 font-weight-medium"
@@ -813,6 +812,34 @@
           </v-card>
         </v-dialog>
 
+        <!-- NOTIFY DIALOG -->
+        <v-dialog v-model="notify_allow.open" max-width="350">
+          <v-card>
+            <v-card-title class="text-h5 font-weight-medium"
+              >NOTIFICATIONS?</v-card-title
+            >
+            <v-card-text>Wire would like to send you notifications</v-card-text>
+            <v-card-actions>
+              <v-btn
+                @click="notify_allow = { open: false, accept: false }"
+                color="grey darken-1"
+                text
+                >Decline</v-btn
+              >
+              <v-spacer></v-spacer>
+              <v-btn
+                @click="
+                  $subscribe(), (notify_allow = { open: false, accept: true })
+                "
+                color="blue accent-1"
+                text
+                >Accept</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <!-- BUY DIALOG -->
         <v-dialog
           @click:outside="buy_chatroom = { open: false }"
           v-model="buy_chatroom.open"
@@ -922,6 +949,10 @@ export default {
     username: "",
     password: "",
     sticky: true,
+    notify_allow: {
+      open: false,
+      accept: false,
+    },
 
     drawer: false,
     current: false,
@@ -988,16 +1019,10 @@ export default {
         this.all_people = response.data;
       });
     this.$root.socket.on("user", (data) => {
-      if (data.strikes != this.$root.user.strikes)
-        this.$notify(
-          `You have ${data.strikes} strikes!`,
-          "orange--text",
-          "mdi-gavel",
-          3000
-        );
-      if (this.$root.router !== "error" && this.$root.user !== data)
-        this.$root.user = data;
+      if (this.$root.user !== data) this.$root.user = data;
     });
+    if (store.get("notification_id"))
+      this.notify_allow = { open: false, accept: false };
   },
   methods: {
     close() {
