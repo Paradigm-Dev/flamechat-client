@@ -200,519 +200,526 @@
         style="overflow: hidden"
       >
         <main>
-          <v-slide-x-transition group>
-            <!-- DRAWER -->
-            <v-navigation-drawer
-              :style="{
-                width: drawer ? '256px !important' : '56px !important',
-                height: 'calc(100vh - 38px)',
-              }"
-              class="grey darken-4"
-              absolute
-              permanent
-              :mini-variant="!drawer"
-              v-model="drawer"
-              key="root_drawer"
-            >
-              <v-list>
-                <v-list-item-group mandatory v-model="current_id">
-                  <v-list-item
-                    value="home"
-                    @click="
-                      current_id = 'home';
-                      current = null;
-                      current_dm_person = false;
-                    "
-                  >
-                    <v-list-item-icon
-                      ><v-icon>mdi-home</v-icon></v-list-item-icon
-                    >
-                    <v-list-item-title>Home</v-list-item-title>
-                  </v-list-item>
-
-                  <v-list-item
-                    :value="current_dm_person ? current_id : 'dm'"
-                    @click="
-                      current_id = 'dm';
-                      current = null;
-                    "
-                  >
-                    <v-list-item-icon
-                      ><v-icon>mdi-account-lock</v-icon></v-list-item-icon
-                    >
-                    <v-list-item-title>Direct Messages</v-list-item-title>
-                  </v-list-item>
-
-                  <v-divider></v-divider>
-
-                  <v-list-item
-                    v-for="(chatroom, index) in $root.user.chatrooms"
-                    :key="index"
-                    :value="chatroom.id"
-                    @click="changeChatroom(chatroom, false)"
-                  >
-                    <v-list-item-icon
-                      ><v-icon>{{ chatroom.icon }}</v-icon></v-list-item-icon
-                    >
-                    <v-list-item-title>{{ chatroom.name }}</v-list-item-title>
-                  </v-list-item>
-                </v-list-item-group>
+          <!-- DRAWER -->
+          <v-navigation-drawer
+            :style="{
+              width: drawer ? '256px !important' : '56px !important',
+              height: 'calc(100vh - 38px)',
+            }"
+            class="grey darken-4"
+            absolute
+            permanent
+            :mini-variant="!drawer"
+            v-model="drawer"
+            key="root_drawer"
+          >
+            <v-list>
+              <v-list-item-group mandatory v-model="current_id">
+                <v-list-item
+                  value="home"
+                  @click="
+                    current_id = 'home';
+                    current = null;
+                    current_dm_person = false;
+                  "
+                >
+                  <v-list-item-icon><v-icon>mdi-home</v-icon></v-list-item-icon>
+                  <v-list-item-title>Home</v-list-item-title>
+                </v-list-item>
 
                 <v-list-item
-                  @click="signOut()"
-                  v-if="drawer"
-                  style="position: absolute; bottom: 8px; width: 256px"
+                  :value="current_dm_person ? current_id : 'dm'"
+                  @click="
+                    current_id = 'dm';
+                    current = null;
+                  "
                 >
-                  <v-list-item-avatar
-                    ><v-img
-                      :src="`https://www.theparadigmdev.com/relay/profile-pics/${$root.user._id}.png`"
-                    ></v-img
-                  ></v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title
-                      class="text-left font-weight-medium"
-                      :style="{ color: $root.user.color }"
-                      >{{ $root.user.username }}</v-list-item-title
-                    >
-                    <v-list-item-subtitle
-                      >Click to sign out</v-list-item-subtitle
-                    >
-                  </v-list-item-content>
-
-                  <v-list-item-action>
-                    <v-btn icon @click="drawer = !drawer"
-                      ><v-icon>{{
-                        drawer ? "mdi-chevron-left" : "mdi-chevron-right"
-                      }}</v-icon></v-btn
-                    >
-                  </v-list-item-action>
+                  <v-list-item-icon
+                    ><v-icon>mdi-account-lock</v-icon></v-list-item-icon
+                  >
+                  <v-list-item-title>Direct Messages</v-list-item-title>
                 </v-list-item>
-              </v-list>
 
-              <v-btn
-                v-if="!drawer"
-                fab
-                fixed
-                bottom
-                right
-                small
-                class="elevation-0"
-                :style="{ left: drawer ? '' : '8px' }"
-                color="transparent"
-                @click="drawer = !drawer"
-                ><v-icon>{{
-                  drawer ? "mdi-chevron-left" : "mdi-chevron-right"
-                }}</v-icon></v-btn
+                <v-divider></v-divider>
+
+                <v-list-item
+                  v-for="(chatroom, index) in $root.user.chatrooms"
+                  :key="index"
+                  :value="chatroom.id"
+                  @click="changeChatroom(chatroom, false)"
+                >
+                  <v-list-item-icon
+                    ><v-icon>{{ chatroom.icon }}</v-icon></v-list-item-icon
+                  >
+                  <v-list-item-title>{{ chatroom.name }}</v-list-item-title>
+                </v-list-item>
+              </v-list-item-group>
+
+              <v-list-item
+                @click="signOut()"
+                v-if="drawer"
+                style="position: absolute; bottom: 8px; width: 256px"
               >
+                <v-list-item-avatar
+                  ><v-img
+                    :src="`https://www.theparadigmdev.com/relay/profile-pics/${$root.user._id}.png`"
+                  ></v-img
+                ></v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="text-left font-weight-medium"
+                    :style="{ color: $root.user.color }"
+                    >{{ $root.user.username }}</v-list-item-title
+                  >
+                  <v-list-item-subtitle>Click to sign out</v-list-item-subtitle>
+                </v-list-item-content>
+
+                <v-list-item-action>
+                  <v-btn icon @click="drawer = !drawer"
+                    ><v-icon>{{
+                      drawer ? "mdi-chevron-left" : "mdi-chevron-right"
+                    }}</v-icon></v-btn
+                  >
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+
+            <v-btn
+              v-if="!drawer"
+              fab
+              fixed
+              bottom
+              right
+              small
+              class="elevation-0"
+              :style="{ left: drawer ? '' : '8px' }"
+              color="transparent"
+              @click="drawer = !drawer"
+              ><v-icon>{{
+                drawer ? "mdi-chevron-left" : "mdi-chevron-right"
+              }}</v-icon></v-btn
+            >
+          </v-navigation-drawer>
+
+          <!-- HOME -->
+          <section
+            class="text-center mt-12 px-4"
+            key="home"
+            :style="{ 'margin-left': drawer ? '256px' : '56px' }"
+            v-if="
+              current_id == 'home' &&
+              ($vuetify.breakpoint.smAndDown ? (drawer ? false : true) : true)
+            "
+          >
+            <h3 class="text-h3 font-weight-light">Welcome to Wire!</h3>
+            <p class="mt-3">
+              Wire is a secure and freedom-oriented chatting app.
+            </p>
+            <div style="max-width: 150px; margin: auto">
+              <v-btn
+                color="#0C4A6E"
+                x-large
+                class="mt-8"
+                block
+                @click="buy_chatroom.open = true"
+              >
+                <v-icon left>mdi-plus</v-icon>Create
+              </v-btn>
+              <v-btn
+                color="#0C4A6E"
+                x-large
+                block
+                class="mt-2"
+                @click="add_chatroom.open = true"
+                ><v-icon left>mdi-forum</v-icon>Join</v-btn
+              >
+            </div>
+          </section>
+
+          <!-- DM -->
+          <section
+            :style="{ 'margin-left': drawer ? '256px' : '56px' }"
+            v-if="current_id == 'dm' || current_dm_person"
+            key="dm"
+            class="d-flex"
+          >
+            <v-navigation-drawer
+              :style="{
+                width: !drawer ? '256px !important' : '56px !important',
+                height: 'calc(100vh - 38px)',
+              }"
+              permanent
+              :mini-variant="drawer"
+              class="grey darken-4"
+            >
+              <v-list>
+                <v-list-item-group v-model="current_dm_person">
+                  <v-list-item
+                    @click="changeChatroom(friend, true)"
+                    :value="friend.username"
+                    v-for="(friend, index) in approved_friends"
+                    :key="index"
+                  >
+                    <v-badge
+                      style="position: relative; left: -15px"
+                      bordered
+                      bottom
+                      dot
+                      :offset-x="!drawer ? 25 : 16"
+                      offset-y="17"
+                      color="green"
+                      :value="friend.in"
+                    >
+                      <v-list-item-avatar
+                        :class="{
+                          'ma-2': $vuetify.breakpoint.xsOnly
+                            ? drawer
+                              ? true
+                              : true
+                            : drawer
+                            ? true
+                            : false,
+                        }"
+                        ><v-img
+                          loading="lazy"
+                          :src="`https://www.theparadigmdev.com/relay/profile-pics/${friend._id}.png`"
+                        ></v-img
+                      ></v-list-item-avatar>
+                    </v-badge>
+                    <v-list-item-title
+                      class="font-weight-medium"
+                      :style="{ color: friend.color }"
+                      >{{ friend.username }}</v-list-item-title
+                    >
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
             </v-navigation-drawer>
 
-            <!-- HOME -->
-            <section
-              class="text-center mt-12 px-4"
-              key="home"
-              :style="{ 'margin-left': drawer ? '256px' : '56px' }"
-              v-if="
-                current_id == 'home' &&
-                ($vuetify.breakpoint.smAndDown ? (drawer ? false : true) : true)
+            <!-- CHAT LIST -->
+            <div
+              v-if="current"
+              v-chat-scroll="{
+                always: false,
+                smooth: true,
+                notSmoothOnInit: true,
+              }"
+              style="
+                height: calc(100vh - 136px);
+                width: calc(100vw - 312px) !important;
+                overflow: auto;
+                padding: 16px 16px 0px 16px;
               "
             >
-              <h3 class="text-h3 font-weight-light">Welcome to Wire!</h3>
-              <p class="mt-3">
-                Wire is a secure and freedom-oriented chatting app.
+              <p
+                class="text-center grey--text font-italic font-weight-light mt-6"
+                v-if="current.messages.length < 1"
+              >
+                There are no messages posted here.
               </p>
-              <div style="max-width: 150px; margin: auto">
-                <v-btn
-                  color="#0C4A6E"
-                  x-large
-                  class="mt-8"
-                  block
-                  @click="buy_chatroom.open = true"
-                >
-                  <v-icon left>mdi-plus</v-icon>Create
-                </v-btn>
-                <v-btn
-                  color="#0C4A6E"
-                  x-large
-                  block
-                  class="mt-2"
-                  @click="add_chatroom.open = true"
-                  ><v-icon left>mdi-forum</v-icon>Join</v-btn
-                >
-              </div>
-            </section>
 
-            <!-- DM -->
-            <section
-              :style="{ 'margin-left': drawer ? '256px' : '56px' }"
-              v-if="current_id == 'dm' || current_dm_person"
-              key="dm"
-              class="d-flex"
-            >
-              <v-navigation-drawer
-                :style="{
-                  width: !drawer ? '256px !important' : '56px !important',
-                  height: 'calc(100vh - 38px)',
-                }"
-                permanent
-                :mini-variant="drawer"
-                class="grey darken-4"
-              >
-                <v-list>
-                  <v-list-item-group v-model="current_dm_person">
-                    <v-list-item
-                      @click="changeChatroom(friend, true)"
-                      :value="friend.username"
-                      v-for="(friend, index) in approved_friends"
-                      :key="index"
-                    >
-                      <v-badge
-                        style="position: relative; left: -15px"
-                        bordered
-                        bottom
-                        dot
-                        :offset-x="!drawer ? 25 : 16"
-                        offset-y="17"
-                        color="green"
-                        :value="friend.in"
-                      >
-                        <v-list-item-avatar
-                          :class="{
-                            'ma-2': $vuetify.breakpoint.xsOnly
-                              ? drawer
-                                ? true
-                                : true
-                              : drawer
-                              ? true
-                              : false,
-                          }"
-                          ><v-img
-                            loading="lazy"
-                            :src="`https://www.theparadigmdev.com/relay/profile-pics/${friend._id}.png`"
-                          ></v-img
-                        ></v-list-item-avatar>
-                      </v-badge>
-                      <v-list-item-title
-                        class="font-weight-medium"
-                        :style="{ color: friend.color }"
-                        >{{ friend.username }}</v-list-item-title
-                      >
-                    </v-list-item>
-                  </v-list-item-group>
-                </v-list>
-              </v-navigation-drawer>
-
-              <!-- CHAT LIST -->
               <div
-                v-if="current"
-                v-chat-scroll="{
-                  always: false,
-                  smooth: true,
-                  notSmoothOnInit: true,
-                }"
-                style="
-                  height: calc(100vh - 136px);
-                  width: calc(100vw - 312px) !important;
-                  overflow: auto;
-                  padding: 16px 16px 0px 16px;
-                "
+                v-for="(message, index) in current.messages"
+                :key="message._id"
+                @mouseover="current_message = index"
+                @mouseleave="current_message = -1"
+                class="d-flex"
+                style="position: relative"
               >
+                <img
+                  style="border-radius: 40px"
+                  class="mt-1"
+                  height="40"
+                  width="40"
+                  :src="`https://www.theparadigmdev.com/relay/profile-pics/${message.user_id}.png`"
+                />
                 <div
-                  v-for="(message, index) in current.messages"
-                  :key="message._id"
-                  @mouseover="current_message = index"
-                  @mouseleave="current_message = -1"
-                  class="d-flex"
-                  style="position: relative"
+                  class="ml-3"
+                  style="flex-grow: 1; width: calc(100% - 125px)"
                 >
+                  <p class="mb-0">
+                    <span
+                      class="font-weight-medium"
+                      :style="{ color: message.color }"
+                    >
+                      {{ message.username }}
+                    </span>
+                    <span class="caption grey--text font-weight-light ml-1">
+                      {{ message.timestamp }}
+                    </span>
+                    <span
+                      class="caption grey--text font-weight-light ml-1"
+                      v-if="message.edits != 0 && message.type == 'message'"
+                      >•<span class="pl-1">
+                        {{ message.edits }}
+                        {{ message.edits > 1 ? "edits" : "edit" }}
+                      </span>
+                    </span>
+                  </p>
+                  <p
+                    v-if="message.type == 'message'"
+                    v-html="message.content"
+                  ></p>
+                  <v-card
+                    v-if="message.type == 'file'"
+                    @click="window.open(message.url)"
+                    max-width="350"
+                  >
+                    <v-card-title>{{ message.content }}</v-card-title>
+                  </v-card>
                   <img
-                    style="border-radius: 40px"
-                    class="mt-1"
-                    height="40"
-                    width="40"
-                    :src="`https://www.theparadigmdev.com/relay/profile-pics/${message.user_id}.png`"
+                    v-if="message.type == 'image'"
+                    :src="message.url"
+                    style="max-width: 40vw"
                   />
-                  <div
-                    class="ml-3"
-                    style="flex-grow: 1; width: calc(100% - 125px)"
-                  >
-                    <p class="mb-0">
-                      <span
-                        class="font-weight-medium"
-                        :style="{ color: message.color }"
-                      >
-                        {{ message.username }}
-                      </span>
-                      <span class="caption grey--text font-weight-light ml-1">
-                        {{ message.timestamp }}
-                      </span>
-                      <span
-                        class="caption grey--text font-weight-light ml-1"
-                        v-if="message.edits != 0 && message.type == 'message'"
-                        >•<span class="pl-1">
-                          {{ message.edits }}
-                          {{ message.edits > 1 ? "edits" : "edit" }}
-                        </span>
-                      </span>
-                    </p>
-                    <p
-                      v-if="message.type == 'message'"
-                      v-html="message.content"
-                    ></p>
-                    <v-card
-                      v-if="message.type == 'file'"
-                      @click="window.open(message.url)"
-                      max-width="350"
-                    >
-                      <v-card-title>{{ message.content }}</v-card-title>
-                    </v-card>
-                    <img
-                      v-if="message.type == 'image'"
-                      :src="message.url"
-                      style="max-width: 40vw"
-                    />
-                    <video
-                      v-if="message.type == 'video'"
-                      controls
-                      :src="message.url"
-                    ></video>
-                  </div>
-                  <div
-                    style="position: absolute; top: 0px; right: 0px"
-                    v-if="
-                      current_message == index
-                        ? message.user_id == $root.user._id
-                          ? true
-                          : current.owner == $root.user._id
-                          ? true
-                          : $root.user.rights.admin
-                          ? true
-                          : false
+                  <video
+                    v-if="message.type == 'video'"
+                    controls
+                    :src="message.url"
+                  ></video>
+                </div>
+                <div
+                  style="position: absolute; top: 0px; right: 0px"
+                  v-if="
+                    current_message == index
+                      ? message.user_id == $root.user._id
+                        ? true
+                        : current.owner == $root.user._id
+                        ? true
+                        : $root.user.rights.admin
+                        ? true
                         : false
-                    "
+                      : false
+                  "
+                >
+                  <v-btn
+                    small
+                    icon
+                    color="grey darken-2"
+                    v-if="message.type == 'message'"
+                    @click="editChat(message)"
+                    ><v-icon>mdi-pencil</v-icon></v-btn
                   >
-                    <v-btn
-                      small
-                      icon
-                      color="grey darken-2"
-                      v-if="message.type == 'message'"
-                      @click="editChat(message)"
-                      ><v-icon>mdi-pencil</v-icon></v-btn
-                    >
-                    <v-btn
-                      small
-                      icon
-                      color="grey darken-2"
-                      @click="deleteChat(message)"
-                      ><v-icon>mdi-delete</v-icon></v-btn
-                    >
-                  </div>
+                  <v-btn
+                    small
+                    icon
+                    color="grey darken-2"
+                    @click="deleteChat(message)"
+                    ><v-icon>mdi-delete</v-icon></v-btn
+                  >
                 </div>
               </div>
-            </section>
+            </div>
+          </section>
 
-            <!-- CHATROOM VIEW -->
-            <section
-              :style="{ 'margin-left': drawer ? '256px' : '56px' }"
-              v-if="current && !current_dm_person"
-              key="chatroom"
+          <!-- CHATROOM VIEW -->
+          <section
+            :style="{ 'margin-left': drawer ? '256px' : '56px' }"
+            v-if="current && !current_dm_person"
+            key="chatroom"
+          >
+            <!-- CHAT LIST -->
+            <div
+              v-if="current"
+              v-chat-scroll="{
+                always: false,
+                smooth: true,
+                notSmoothOnInit: true,
+              }"
+              style="
+                height: calc(100vh - 136px);
+                overflow: auto;
+                padding: 16px 16px 0px 16px;
+              "
             >
-              <!-- CHAT LIST -->
-              <div
-                v-if="current"
-                v-chat-scroll="{
-                  always: false,
-                  smooth: true,
-                  notSmoothOnInit: true,
-                }"
-                style="
-                  height: calc(100vh - 136px);
-                  overflow: auto;
-                  padding: 16px 16px 0px 16px;
-                "
+              <p
+                class="text-center grey--text font-italic font-weight-light mt-6"
+                v-if="current.messages.length < 1"
               >
+                There are no messages posted here.
+              </p>
+
+              <div
+                v-for="(message, index) in current.messages"
+                :key="message._id"
+                @mouseover="current_message = index"
+                @mouseleave="current_message = -1"
+                class="d-flex"
+                style="position: relative"
+              >
+                <img
+                  style="border-radius: 40px"
+                  class="mt-1"
+                  height="40"
+                  width="40"
+                  :src="`https://www.theparadigmdev.com/relay/profile-pics/${message.user_id}.png`"
+                />
                 <div
-                  v-for="(message, index) in current.messages"
-                  :key="message._id"
-                  @mouseover="current_message = index"
-                  @mouseleave="current_message = -1"
-                  class="d-flex"
-                  style="position: relative"
+                  class="ml-3"
+                  style="flex-grow: 1; width: calc(100% - 125px)"
                 >
+                  <p class="mb-0">
+                    <span
+                      class="font-weight-medium"
+                      :style="{ color: message.color }"
+                    >
+                      {{ message.username }}
+                    </span>
+                    <span class="caption grey--text font-weight-light ml-1">
+                      {{ message.timestamp }}
+                    </span>
+                    <span
+                      class="caption grey--text font-weight-light ml-1"
+                      v-if="message.edits != 0 && message.type == 'message'"
+                      >•<span class="pl-1">
+                        {{ message.edits }}
+                        {{ message.edits > 1 ? "edits" : "edit" }}
+                      </span>
+                    </span>
+                  </p>
+                  <p
+                    v-if="message.type == 'message'"
+                    v-html="message.content"
+                  ></p>
+                  <v-card
+                    v-if="message.type == 'file'"
+                    @click="window.open(message.url)"
+                    max-width="350"
+                  >
+                    <v-card-title>{{ message.content }}</v-card-title>
+                  </v-card>
                   <img
-                    style="border-radius: 40px"
-                    class="mt-1"
-                    height="40"
-                    width="40"
-                    :src="`https://www.theparadigmdev.com/relay/profile-pics/${message.user_id}.png`"
+                    v-if="message.type == 'image'"
+                    :src="message.url"
+                    style="max-width: 40vw"
                   />
-                  <div
-                    class="ml-3"
-                    style="flex-grow: 1; width: calc(100% - 125px)"
-                  >
-                    <p class="mb-0">
-                      <span
-                        class="font-weight-medium"
-                        :style="{ color: message.color }"
-                      >
-                        {{ message.username }}
-                      </span>
-                      <span class="caption grey--text font-weight-light ml-1">
-                        {{ message.timestamp }}
-                      </span>
-                      <span
-                        class="caption grey--text font-weight-light ml-1"
-                        v-if="message.edits != 0 && message.type == 'message'"
-                        >•<span class="pl-1">
-                          {{ message.edits }}
-                          {{ message.edits > 1 ? "edits" : "edit" }}
-                        </span>
-                      </span>
-                    </p>
-                    <p
-                      v-if="message.type == 'message'"
-                      v-html="message.content"
-                    ></p>
-                    <v-card
-                      v-if="message.type == 'file'"
-                      @click="window.open(message.url)"
-                      max-width="350"
-                    >
-                      <v-card-title>{{ message.content }}</v-card-title>
-                    </v-card>
-                    <img
-                      v-if="message.type == 'image'"
-                      :src="message.url"
-                      style="max-width: 40vw"
-                    />
-                    <video
-                      v-if="message.type == 'video'"
-                      controls
-                      :src="message.url"
-                    ></video>
-                  </div>
-                  <div
-                    style="position: absolute; top: 0px; right: 0px"
-                    v-if="
-                      current_message == index
-                        ? message.user_id == $root.user._id
-                          ? true
-                          : current.owner == $root.user._id
-                          ? true
-                          : $root.user.rights.admin
-                          ? true
-                          : false
+                  <video
+                    v-if="message.type == 'video'"
+                    controls
+                    :src="message.url"
+                  ></video>
+                </div>
+                <div
+                  style="position: absolute; top: 0px; right: 0px"
+                  v-if="
+                    current_message == index
+                      ? message.user_id == $root.user._id
+                        ? true
+                        : current.owner == $root.user._id
+                        ? true
+                        : $root.user.rights.admin
+                        ? true
                         : false
-                    "
+                      : false
+                  "
+                >
+                  <v-btn
+                    small
+                    icon
+                    color="grey darken-2"
+                    v-if="message.type == 'message'"
+                    @click="editChat(message)"
+                    ><v-icon>mdi-pencil</v-icon></v-btn
                   >
-                    <v-btn
-                      small
-                      icon
-                      color="grey darken-2"
-                      v-if="message.type == 'message'"
-                      @click="editChat(message)"
-                      ><v-icon>mdi-pencil</v-icon></v-btn
-                    >
-                    <v-btn
-                      small
-                      icon
-                      color="grey darken-2"
-                      @click="deleteChat(message)"
-                      ><v-icon>mdi-delete</v-icon></v-btn
-                    >
-                  </div>
+                  <v-btn
+                    small
+                    icon
+                    color="grey darken-2"
+                    @click="deleteChat(message)"
+                    ><v-icon>mdi-delete</v-icon></v-btn
+                  >
                 </div>
               </div>
-            </section>
+            </div>
+          </section>
 
-            <!-- NEW CHAT FOOTER -->
-            <footer
-              :style="{
-                'margin-left': $vuetify.breakpoint.smAndDown
-                  ? current_dm_person || current_id == 'dm'
-                    ? drawer
-                      ? '312px'
-                      : '112px'
-                    : drawer
-                    ? '256px'
-                    : '56px'
-                  : current_dm_person || current_id == 'dm'
+          <!-- NEW CHAT FOOTER -->
+          <footer
+            :style="{
+              'margin-left': $vuetify.breakpoint.smAndDown
+                ? current_dm_person || current_id == 'dm'
                   ? drawer
                     ? '312px'
-                    : '312px'
+                    : '112px'
                   : drawer
                   ? '256px'
-                  : '56px',
-                width: $vuetify.breakpoint.smAndDown
-                  ? current_dm_person || current_id == 'dm'
-                    ? drawer
-                      ? 'calc(100vw - 312px)'
-                      : 'calc(100vw - 112px)'
-                    : drawer
-                    ? 'calc(100vw - 256px)'
-                    : 'calc(100vw - 56px)'
-                  : current_dm_person || current_id == 'dm'
+                  : '56px'
+                : current_dm_person || current_id == 'dm'
+                ? drawer
+                  ? '312px'
+                  : '312px'
+                : drawer
+                ? '256px'
+                : '56px',
+              width: $vuetify.breakpoint.smAndDown
+                ? current_dm_person || current_id == 'dm'
                   ? drawer
                     ? 'calc(100vw - 312px)'
-                    : 'calc(100vw - 312px)'
+                    : 'calc(100vw - 112px)'
                   : drawer
                   ? 'calc(100vw - 256px)'
-                  : 'calc(100vw - 56px)',
-              }"
-              v-if="
-                current &&
-                ($vuetify.breakpoint.smAndDown ? (drawer ? false : true) : true)
-              "
-              key="footer"
-            >
-              <!-- <v-fade-transition leave-absolute v-if="current_status == 'approved'"> -->
-              <v-fade-transition hide-on-leave v-if="typers.length > 0">
-                <span class="mb-n2 grey--text font-italic text-body-2"
-                  ><span
-                    v-for="(user, index) in typers"
-                    :key="index"
-                    :style="{ color: user.color }"
-                    >{{ user.user
-                    }}<span v-if="typers.length - 1 != index">, </span>
-                  </span>
-                  is typing...</span
-                >
-              </v-fade-transition>
-
-              <v-row
-                no-gutters
-                align="baseline"
-                :style="{
-                  'margin-top': typers.length > 0 ? '0px' : '24px',
-                }"
+                  : 'calc(100vw - 56px)'
+                : current_dm_person || current_id == 'dm'
+                ? drawer
+                  ? 'calc(100vw - 312px)'
+                  : 'calc(100vw - 312px)'
+                : drawer
+                ? 'calc(100vw - 256px)'
+                : 'calc(100vw - 56px)',
+            }"
+            v-if="
+              current &&
+              ($vuetify.breakpoint.smAndDown ? (drawer ? false : true) : true)
+            "
+            key="footer"
+          >
+            <v-fade-transition hide-on-leave v-if="typers.length > 0">
+              <span class="mb-n2 grey--text font-italic text-body-2"
+                ><span
+                  v-for="(user, index) in typers"
+                  :key="index"
+                  :style="{ color: user.color }"
+                  >{{ user.user
+                  }}<span v-if="typers.length - 1 != index">, </span>
+                </span>
+                is typing...</span
               >
-                <v-col cols="10">
-                  <v-text-field
-                    style="width: 100%"
-                    hide-details
-                    v-model="new_message"
-                    label="New message..."
-                    @keyup="startTyping()"
-                    @keyup.enter="sendMessage()"
-                  ></v-text-field>
-                </v-col>
+            </v-fade-transition>
 
-                <v-col cols="2" class="pl-4">
-                  <v-btn
-                    v-if="$vuetify.breakpoint.smAndUp"
-                    icon
-                    @click="sendMessage()"
-                    ><v-icon>mdi-send</v-icon></v-btn
-                  >
-                  <v-btn
-                    icon
-                    @click="upload.open = true"
-                    :class="{ 'mb-3': $vuetify.breakpoint.xsOnly }"
-                    ><v-icon>mdi-paperclip</v-icon></v-btn
-                  >
-                </v-col>
-              </v-row>
-            </footer>
-          </v-slide-x-transition>
+            <v-row
+              no-gutters
+              align="baseline"
+              :style="{
+                'margin-top': typers.length > 0 ? '0px' : '24px',
+              }"
+            >
+              <v-col cols="10">
+                <v-text-field
+                  style="width: 100%"
+                  hide-details
+                  v-model="new_message"
+                  label="New message..."
+                  @keyup="startTyping()"
+                  @keyup.enter="sendMessage()"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="2" class="pl-4">
+                <v-btn
+                  v-if="$vuetify.breakpoint.smAndUp"
+                  icon
+                  @click="sendMessage()"
+                  ><v-icon>mdi-send</v-icon></v-btn
+                >
+                <v-btn
+                  icon
+                  @click="upload.open = true"
+                  :class="{ 'mb-3': $vuetify.breakpoint.xsOnly }"
+                  ><v-icon>mdi-paperclip</v-icon></v-btn
+                >
+              </v-col>
+            </v-row>
+          </footer>
         </main>
 
         <!-- EDIT DIALOG -->
@@ -809,7 +816,7 @@
         </v-dialog>
 
         <!-- NOTIFY DIALOG -->
-        <v-dialog v-model="notify_allow.open" max-width="350">
+        <!-- <v-dialog v-model="notify_allow.open" max-width="350">
           <v-card>
             <v-card-title class="text-h5 font-weight-medium"
               >NOTIFICATIONS?</v-card-title
@@ -833,7 +840,7 @@
               >
             </v-card-actions>
           </v-card>
-        </v-dialog>
+        </v-dialog> -->
 
         <!-- BUY DIALOG -->
         <v-dialog
@@ -861,50 +868,6 @@
                 class="mt-3 mb-3 elevation-0"
                 v-model="buy_chatroom.theme"
               ></v-color-picker>
-              <!-- <p>Icon selection is not ready yet.</p> -->
-              <div v-if="$root.user.moonrocks > 50">
-                <img
-                  src="@/assets/moonrocks.png"
-                  alt="Moonrocks"
-                  class="moonrock-img"
-                /><span class="moonrock-count font-weight-medium red--text"
-                  >- 50</span
-                >
-                <p class="green--text">
-                  You have enough moonrocks to purchase a chatroom.
-                </p>
-                <p class="mb-0">
-                  New Balance:
-                  <span class="font-weight-light"
-                    >{{ $root.user.moonrocks - 50 }} Moonrocks</span
-                  >
-                </p>
-              </div>
-              <div v-if="$root.user.moonrocks == 50">
-                <img
-                  src="@/assets/moonrocks.png"
-                  alt="Moonrocks"
-                  class="moonrock-img"
-                /><span class="moonrock-count font-weight-medium red--text"
-                  >- 50</span
-                >
-                <p class="orange--text mb-0">
-                  You have just enough moonrocks to purchase a chatroom.
-                </p>
-              </div>
-              <div v-if="$root.user.moonrocks < 50">
-                <img
-                  src="@/assets/moonrocks.png"
-                  alt="Moonrocks"
-                  class="moonrock-img"
-                /><span class="moonrock-count font-weight-medium red--text"
-                  >- 50</span
-                >
-                <p class="red--text mb-0">
-                  You do <b>not</b> have enough moonrocks to purchase a
-                  chatroom.
-                </p>
-              </div>
             </v-card-text>
 
             <v-card-actions>
@@ -921,17 +884,22 @@
         </v-dialog>
       </div>
     </v-main>
+    <audio src="@/assets/audio/sent.wav" id="sent_sound"></audio>
+    <audio src="@/assets/audio/msg.wav" id="msg_sound"></audio>
   </v-app>
 </template>
 
 <script>
 import { remote } from "electron";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 import moment from "moment";
 import { shell } from "electron";
 import Store from "./store.js";
 
 let typingTimeout;
+let msg_sound;
+let sent_sound;
+
 const store = new Store();
 
 export default {
@@ -992,14 +960,13 @@ export default {
 
   async created() {
     if (store.get("jwt")) {
+      const jwt = store.get("jwt");
       this.$http
-        .post(
-          remote.app.isPackaged
-            ? "https://www.theparadigmdev.com/api/authentication/verify"
-            : "/api/authentication/verify",
-          { jwt: store.get("jwt") }
-        )
+        .post("https://www.theparadigmdev.com/api/authentication/verify", {
+          jwt,
+        })
         .then(async (response) => {
+          console.log(response);
           if (response.data.valid) {
             this.$root.user = response.data.user;
             this.$root.socket.emit("login", this.$root.user.username);
@@ -1011,6 +978,8 @@ export default {
       .get("https://www.theparadigmdev.com/api/users/shortlist")
       .then((response) => {
         this.all_people = response.data;
+        sent_sound = document.getElementById("sent_sound");
+        msg_sound = document.getElementById("msg_sound");
       });
     this.$root.socket.on("user", (data) => {
       if (this.$root.user !== data) this.$root.user = data;
@@ -1036,16 +1005,11 @@ export default {
 
     signIn() {
       this.$http
-        .post(
-          remote.app.isPackaged
-            ? "https://www.theparadigmdev.com/api/authentication/signin"
-            : "/api/authentication/signin",
-          {
-            username: this.username.toLowerCase(),
-            password: this.password,
-            sticky: this.sticky,
-          }
-        )
+        .post("https://www.theparadigmdev.com/api/authentication/signin", {
+          username: this.username.toLowerCase(),
+          password: this.password,
+          sticky: this.sticky,
+        })
         .then(async (response) => {
           if (!response.data.errors) {
             this.$root.user = response.data.user;
@@ -1062,14 +1026,9 @@ export default {
     signOut() {
       if (this.$root.user) {
         this.$http
-          .post(
-            remote.app.isPackaged
-              ? "https://www.theparadigmdev.com/api/authentication/signout"
-              : "/api/authentication/signout",
-            {
-              _id: this.$root.user._id,
-            }
-          )
+          .post("https://www.theparadigmdev.com/api/authentication/signout", {
+            _id: this.$root.user._id,
+          })
           .then((response) => {
             this.$root.socket.disconnect();
             this.$root.socket = io.connect("https://www.theparadigmdev.com");
@@ -1080,19 +1039,27 @@ export default {
     },
 
     async changeChatroom(to, dm) {
-      if (this.current) this.socket.disconnect();
+      if (this.socket) {
+        this.socket.off("data");
+        this.socket.off("send");
+        this.socket.off("delete");
+        this.socket.off("edit");
+        this.socket.off("kill");
+        this.socket.off("typing");
+        this.socket.off("people");
+        this.socket.off("purge");
+        await this.socket.disconnect();
+      }
       this.current = false;
       this.current_dm_person = false;
       if (dm) {
         this.socket = await io.connect(
-          // TODO(transition to wire endpoints)
-          `https://www.theparadigmdev.com/flamechat/${to.dm}`
+          `https://www.theparadigmdev.com/wire/${to.dm}`
         );
         this.current_dm_person = to.username;
       } else {
         this.socket = await io.connect(
-          // TODO(transition to wire endpoints)
-          `https://www.theparadigmdev.com/flamechat/${to.id}`
+          `https://www.theparadigmdev.com/wire/${to.id}`
         );
       }
       this.socket.on("data", (data) => {
@@ -1100,6 +1067,7 @@ export default {
         this.current_id = dm ? data._id : data.id;
       });
       this.socket.on("send", (data) => {
+        if (data.user_id !== this.$root.user._id) msg_sound.play();
         this.current.messages.push(data);
       });
       this.socket.on("delete", async (id) => {
@@ -1115,7 +1083,7 @@ export default {
         this.current.messages[index] = data;
       });
       this.socket.on("kill", async () => {
-        this.leaveChatroom(true);
+        this.leaveChatroom();
       });
       this.socket.on("typing", (data) => {
         let filteredData = data;
@@ -1136,6 +1104,7 @@ export default {
     },
     async sendMessage() {
       if (this.new_message.length > 0) {
+        sent_sound.play();
         clearTimeout(typingTimeout);
         this.socket.emit("typing", {
           user: this.$root.user.username,
@@ -1179,9 +1148,8 @@ export default {
             timestamp: moment().format("MM/DD/YYYY [at] h:mm a"),
             content: this.upload.file[0].name,
             url: this.current_dm_person
-              ? // TODO(use wire endpoints)
-                `https://www.theparadigmdev.com/relay/flamechat/dm/${this.current_id}/${this.upload.file[0].name}`
-              : `https://www.theparadigmdev.com/relay/flamechat/chatroom/${this.current_id}/${this.upload.file[0].name}`,
+              ? `https://www.theparadigmdev.com/relay/wire/dm/${this.current_id}/${this.upload.file[0].name}`
+              : `https://www.theparadigmdev.com/relay/wire/chatroom/${this.current_id}/${this.upload.file[0].name}`,
             type: "",
           };
           if (this.upload.file[0].type.includes("image")) data.type = "image";
@@ -1255,9 +1223,6 @@ export default {
         })
         .then((response) => {
           this.$root.socket.emit("new_chatroom");
-          this.$http.get(
-            `https://www.theparadigmdev.com/api/users/${this.$root.user._id}/moonrocks/-50`
-          );
           this.$root.user.chatrooms.push(response.data);
           this.changeChatroom(response.data.id);
           this.buy_chatroom = {
@@ -1266,8 +1231,8 @@ export default {
         })
         .catch((error) => console.error(error));
     },
-    leaveChatroom(force) {
-      if (this.$root.user._id != this.current.owner && !force) {
+    leaveChatroom() {
+      if (this.$root.user._id != this.current.owner) {
         this.$http
           .get(
             `https://www.theparadigmdev.com/api/users/${this.$root.user._id}/chatroom/${this.current.id}/leave`
@@ -1289,7 +1254,7 @@ export default {
         this.$notify(
           "You can't leave this chatroom, you own it!",
           "orange--text",
-          "mdi-warning",
+          "mdi-alert",
           3000
         );
     },
@@ -1299,7 +1264,7 @@ export default {
         this.$root.user.rights.admin == true
       ) {
         this.socket.emit("kill");
-        this.leaveChatroom(true);
+        this.leaveChatroom();
         this.$notify("Chatroom deleted", "whit--text", "mdi-delete", 3000);
         this.delete_verify_popup = false;
         await this.$http.get(

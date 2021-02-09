@@ -1,6 +1,6 @@
 {
   "name": "wire-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "A secure and freedom-oriented chatting app.",
   "author": {
@@ -22,7 +22,7 @@
     "core-js": "^3.6.5",
     "electron-updater": "^4.3.5",
     "moment": "^2.29.1",
-    "socket.io-client": "^2.3.1",
+    "socket.io-client": "^3.1.1",
     "v8-compile-cache": "^2.2.0",
     "vue": "^2.6.11",
     "vue-chat-scroll": "^1.4.0",
