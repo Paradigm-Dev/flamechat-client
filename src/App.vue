@@ -970,6 +970,7 @@ export default {
           if (response.data.valid) {
             this.$root.user = response.data.user;
             this.$root.socket.emit("login", this.$root.user.username);
+            this.$subscribe();
           }
         });
     }

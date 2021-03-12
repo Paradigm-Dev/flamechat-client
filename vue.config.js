@@ -3,7 +3,7 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       outputDir: "dist",
-      removeElectronJunk: false,
+      removeElectronJunk: true,
       nodeIntegration: true,
       builderOptions: {
         productName: "Wire",
